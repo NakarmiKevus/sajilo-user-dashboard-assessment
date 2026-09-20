@@ -6,12 +6,15 @@ function UserList() {
   const { users, loading, error } = useUsers();
 
   const [searchUser, setSearchUser] = useState("");
+  const [selectedGender, setSelectedGender] = useState("");
 
   const filteredUsers = users.filter((user) => {
     const matchedSearch = `${user.firstName} ${user.lastName}`
       .toLowerCase()
       .includes(searchUser.toLowerCase());
-    return matchedSearch;
+    const matchedGender =
+      selectedGender === "" || user.gender === selectedGender;
+    return matchedSearch && matchedGender;
   });
 
   return (
@@ -22,13 +25,25 @@ function UserList() {
 
       {error && <p className="text-center text-red-600 py-12">{error}</p>}
 
-      <input
-        type="text"
-        value={searchUser}
-        onChange={(e) => setSearchUser(e.target.value)}
-        placeholder="Search users..."
-        className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-      />
+      <div className="flex  gap-3 mb-6">
+        <input
+          type="text"
+          value={searchUser}
+          onChange={(e) => setSearchUser(e.target.value)}
+          placeholder="Search users..."
+          className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+        />
+
+        <select
+          value={selectedGender}
+          onChange={(e) => setSelectedGender(e.target.value)}
+          className="rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">All Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
 
       {!loading && !error && users.length === 0 && (
         <p className="text-center text-red-600 py-12">No users found.</p>
