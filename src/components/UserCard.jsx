@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
+
 function UserCard({ user }) {
   return (
-    <Link>
+    <Link to={`/user/${user.id}`}>
       <div className="relative flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3 transition duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md">
         <div className="flex h-40 w-full items-center justify-center overflow-hidden rounded-lg bg-slate-50">
           <img
@@ -22,7 +24,6 @@ function UserCard({ user }) {
           {user.company?.name}
         </p>
       </div>
-      5
     </Link>
   );
 }
