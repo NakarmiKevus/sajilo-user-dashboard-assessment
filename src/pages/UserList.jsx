@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserGrid from "../components/UserGrid";
 import { useUsers } from "../hooks/useUsers";
+import Pagination from "../components/Pagination";
 
 function UserList() {
   const { users, loading, error } = useUsers();
 
   const [searchUser, setSearchUser] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
+
+  const userPerPage = 12;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredUsers = users.filter((user) => {
     const matchedSearch = `${user.firstName} ${user.lastName}`
@@ -16,6 +20,17 @@ function UserList() {
       selectedGender === "" || user.gender === selectedGender;
     return matchedSearch && matchedGender;
   });
+
+  const totalPages = Math.ceil(filteredUsers.length / userPerPage);
+  const startIndex = (currentPage - 1) * userPerPage;
+  const paginationUser = filteredUsers.slice(
+    startIndex,
+    startIndex + userPerPage,
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchUser, selectedGender]);
 
   return (
     <section className="max-w-7xl mx-auto p-4 sm:p-6">
@@ -56,7 +71,14 @@ function UserList() {
       )}
 
       {!loading && !error && filteredUsers.length > 0 && (
-        <UserGrid users={filteredUsers} />
+        <>
+          <UserGrid users={paginationUser} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
       )}
     </section>
   );
