@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getAllUsers } from "../services/userService";
 
-export function useUser() {
-  const [users, setUser] = useState([]);
+export function useUsers() {
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -11,8 +11,8 @@ export function useUser() {
       setLoading(true);
       setError("");
       try {
-        const data = new getAllUsers();
-        setUser(data.users || []);
+        const data = await getAllUsers();
+        setUsers(data.users || []);
       } catch (err) {
         setError("Unable to load users. Please try again");
       } finally {
