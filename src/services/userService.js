@@ -16,3 +16,8 @@ export async function createUser(userData) {
   const response = await axios.post(`${BASE_URL}/add`, userData);
   return response.data;
 }
+
+export async function deleteUser(id) {
+  const response = await axios.delete(`${BASE_URL}/${id}`);
+  return response.data;
+}

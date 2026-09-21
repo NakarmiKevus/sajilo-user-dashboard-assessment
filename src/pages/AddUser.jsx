@@ -16,6 +16,7 @@ function AddUser() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
 
   function validation() {
     const newErrors = {};
@@ -55,7 +56,10 @@ function AddUser() {
         ...formData,
         age: Number(formData.age),
       });
-      navigate("/");
+      setSuccessMessage("User added successfully!");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (err) {
       setError("Unable to add user. Please try again");
     } finally {
@@ -68,6 +72,12 @@ function AddUser() {
       {error && (
         <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
           {error}
+        </p>
+      )}
+
+      {successMessage && (
+        <p className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-700 text-center">
+          {successMessage}
         </p>
       )}
 

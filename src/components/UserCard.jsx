@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-function UserCard({ user }) {
+function UserCard({ user, onDeleteUser }) {
   return (
-    <Link to={`/user/${user.id}`}>
-      <div className="relative flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3 transition duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md">
+    <div className="relative flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3 transition duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md">
+      <Link to={`/user/${user.id}`}>
         <div className="flex h-40 w-full items-center justify-center overflow-hidden rounded-lg bg-slate-50">
           <img
             src={user.image}
@@ -17,14 +17,29 @@ function UserCard({ user }) {
         <p className="text-[13px] font-medium leading-5 text-slate-600">
           {user.email}
         </p>
-        <p className="text-[13px] font-medium leading-5 text-slate-00">
+        <p className="text-[13px] font-medium leading-5 text-slate-500">
           {user.phone}
         </p>
         <p className="text-[13px] font-medium leading-5 text-slate-600">
           {user.company?.name}
         </p>
-      </div>
-    </Link>
+      </Link>
+
+      <button
+        onClick={() => {
+          const confirmed = window.confirm(
+            `Are you sure you want to delete ${user.firstName} ${user.lastName}`,
+          );
+
+          if (confirmed) {
+            onDeleteUser(user.id);
+          }
+        }}
+        className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+      >
+        Delete
+      </button>
+    </div>
   );
 }
 export default UserCard;

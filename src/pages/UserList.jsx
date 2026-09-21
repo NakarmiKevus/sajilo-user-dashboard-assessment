@@ -4,7 +4,8 @@ import { useUsers } from "../hooks/useUsers";
 import Pagination from "../components/Pagination";
 
 function UserList() {
-  const { users, loading, error } = useUsers();
+  const { users, loading, error, actionMessage, actionType, handleDeleteUser } =
+    useUsers();
 
   const [searchUser, setSearchUser] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
@@ -34,6 +35,17 @@ function UserList() {
 
   return (
     <section className="max-w-7xl mx-auto p-4 sm:p-6">
+      {actionMessage && (
+        <p
+          className={`text-center mb-4 rounded-lg px-4 py-3 text-sm ${
+            actionType === "success"
+              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+              : "bg-red-50 text-red-700 border border-red-200"
+          }`}
+        >
+          {actionMessage}
+        </p>
+      )}
       {loading && (
         <p className="text-center text-slate-500 py-12">Loading users...</p>
       )}
@@ -72,7 +84,7 @@ function UserList() {
 
       {!loading && !error && filteredUsers.length > 0 && (
         <>
-          <UserGrid users={paginationUser} />
+          <UserGrid users={paginationUser} onDeleteUser={handleDeleteUser} />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
