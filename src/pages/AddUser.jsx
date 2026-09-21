@@ -15,6 +15,23 @@ function AddUser() {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+
+  function validation() {
+    const newErrors = {};
+
+    if (!formData.firstName.trim())
+      newErrors.firstName = "First name is required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!formData.age.trim()) {
+      newErrors.age = "Age is required";
+    } else if (Number(formData.age) <= 0 || Number(formData.age) > 120) {
+      newErrors.age = "Enter a valid age";
+    }
+    return newErrors;
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -24,8 +41,14 @@ function AddUser() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+    const validationErrors = validation();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
     setSubmitting(true);
-    setError("");
 
     try {
       await createUser({
@@ -59,6 +82,9 @@ function AddUser() {
             placeholder="Enter First Name..."
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
           />
+          {errors.firstName && (
+            <p className="mt-1 text-xs text-red-600"> {errors.firstName}</p>
+          )}
         </div>
 
         <div>
@@ -71,6 +97,9 @@ function AddUser() {
             placeholder="Enter Last Name..."
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
           />
+          {errors.lastName && (
+            <p className="mt-1 text-xs text-red-600"> {errors.lastName}</p>
+          )}
         </div>
 
         <div>
@@ -83,6 +112,9 @@ function AddUser() {
             placeholder="Enter Phone number..."
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
           />
+          {errors.phone && (
+            <p className="mt-1 text-xs text-red-600"> {errors.phone}</p>
+          )}
         </div>
 
         <div>
@@ -95,6 +127,9 @@ function AddUser() {
             placeholder="Enter email..."
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
           />
+          {errors.email && (
+            <p className="mt-1 text-xs text-red-600"> {errors.email}</p>
+          )}
         </div>
 
         <div>
@@ -107,6 +142,9 @@ function AddUser() {
             placeholder="Enter age..."
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
           />
+          {errors.age && (
+            <p className="mt-1 text-xs text-red-600"> {errors.age}</p>
+          )}
         </div>
 
         <div className="flex items-center gap-6">
