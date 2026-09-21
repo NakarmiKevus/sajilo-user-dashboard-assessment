@@ -1,16 +1,74 @@
-# React + Vite
+Sajilo Users — User Management Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Built for the Sajilo Life Pvt. Ltd. React Developer Intern/Trainee assessment.
 
-Currently, two official plugins are available:
+Live Demo: https://sajilo-user-dashboard-assessment.vercel.app/
+GitHub Repo: https://github.com/NakarmiKevus/sajilo-user-dashboard-assessment.git
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Overview
 
-## React Compiler
+Browse users from the DummyJSON API, search/filter them, view full user details, add new users, and delete existing ones.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Tech Stack
 
-## Expanding the Oxlint configuration
+React (Vite), Tailwind CSS v4, React Router, Axios
+Custom hook: useUsers
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Features
+
+User Listing
+
+Responsive grid with photo, name, email, phone, company
+Search by name, filter by gender
+Pagination
+Loading/error/empty states (including distinguishing "no users at all" vs "no results for filters")
+
+User Details
+
+/user/:id page with personal info, address, company, and bank sections
+Back navigation
+404/error handling for invalid IDs
+
+Add User
+
+Controlled form with client-side validation (required fields, email format, age range)
+POST request to DummyJSON's simulated add endpoint
+Success confirmation with redirect, inline error messages on failed validation
+
+Delete User
+
+Available from both the user card and the details page
+Confirmation dialog before deletion
+DELETE request, color-coded success/error feedback
+Removed from the list immediately on success
+
+Other
+
+Reusable components: UserCard, UserGrid, Pagination, Navbar
+Centralized API calls in userService.js
+Handles missing/malformed nested fields (address, company, bank) defensively
+
+Getting Started
+bash
+git clone [repo URL]
+cd project-1-user-dashboard
+npm install
+npm run dev
+
+Open http://localhost:5173.
+
+API
+
+DummyJSON Users
+
+GET /users?limit=0
+GET /users/:id
+POST /users/add
+DELETE /users/:id
+
+Key Decisions
+
+All users fetched upfront (no server pagination); search/filter/pagination run client-side, consistent with Project 2's approach.
+DummyJSON's Add/Delete endpoints are simulated and don't persist data server-side (explicitly allowed per the assessment brief). Newly added users appear in the current session but won't survive a page refresh, since there's no real backend. Deleted users are removed from local state immediately, with the same server-side limitation.
+No Context API used — unlike Project 2's cart, CRUD operations here don't need global state shared across unrelated components, so operations live directly in the pages/hook that need them.
+Edit User was deliberately not built, due to time constraints. Add, Delete, and full Read/listing functionality were prioritized to demonstrate CRUD competency, per the brief's own guidance to prioritize core requirements over completeness of every feature.
