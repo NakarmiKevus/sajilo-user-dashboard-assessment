@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { getUserById } from "../services/userService";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { getUserById, deleteUser } from "../services/userService";
 
 function UserDetails() {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [deleting, setDeleting] = useState(false);
+  const [actionMessage, setActionMessage] = useState("");
+  const [actionType, setActionType] = useState("");
 
   useEffect(() => {
     async function fetchUsersById() {
@@ -26,6 +31,25 @@ function UserDetails() {
     fetchUsersById();
   }, [id]);
 
+  async function handleDelete() {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${user.firstName} ${user.lastName}?`,
+    );
+    if (!confirmed) return;
+
+    setDeleting(true);
+    try {
+      await deleteUser(id);
+      setActionMessage("User deleted successfully. Redirecting...");
+      setActionType("success");
+      setTimeout(() => navigate("/"), 1000);
+    } catch {
+      setActionMessage("Unable to delee user. Please try again.");
+      setActionType("error");
+      setDeleting(false);
+    }
+  }
+
   return (
     <section className="max-w-4xl mx-auto p-4 sm:p-6">
       {loading && (
@@ -34,14 +58,36 @@ function UserDetails() {
 
       {error && <p className="text-center text-red-600 py-12">{error}</p>}
 
+      {actionMessage && (
+        <p
+          className={`mb-4 rounded-lg px-4 py-3 text-sm text-center ${
+            actionType === "success"
+              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+              : "bg-red-50 text-red-700 border border-red-200"
+          }`}
+        >
+          {actionMessage}
+        </p>
+      )}
+
       {!loading && !error && user && (
         <div>
-          <Link
-            to="/"
-            className="mb-4 inline-flex items-center gap-1 text-sm text-slate-600 hover:text-blue-600"
-          >
-            ← Back to users
-          </Link>
+          <div className="flex items-center justify-between mb-4">
+            <Link
+              to="/"
+              className="mb-4 inline-flex items-center gap-1 text-sm text-slate-600 hover:text-blue-600"
+            >
+              ← Back to users
+            </Link>
+
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:bg-slate-300"
+            >
+              {deleting ? "Deleting..." : "Delete User"}
+            </button>
+          </div>
 
           <div>
             <img
